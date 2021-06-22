@@ -1,0 +1,76 @@
+import React, { useEffect } from 'react';
+import { View } from "react-native";
+import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
+import { CommonActions } from '@react-navigation/native'
+import { useSelector } from 'react-redux';
+
+import Ionicons from 'react-native-vector-icons/Ionicons';
+import AntDesign from 'react-native-vector-icons/AntDesign'
+
+import TopTabNav from './topTabNav';
+import Komisi from './komisiTabNav';
+import profileStack from './profileStack';
+
+const Tab = createBottomTabNavigator();
+
+
+const blank = () => <View style={{flex: 1}}/>
+
+const bottomTabNav = ({navigation}) => {
+  const user = useSelector(state => state.user)
+  useEffect(() => {
+    if(user.id == 0){
+      navigation.dispatch(CommonActions.reset({
+        index: 0,
+        routes: [{name: 'Welcome'}]
+      }))
+    }
+  }, [user.id])
+  return (
+    <Tab.Navigator tabBarOptions={{activeTintColor: '#C1272D', labelStyle: {fontSize: 13}}}>
+      <Tab.Screen
+        name="Home"
+        component={TopTabNav}
+        options={{
+          tabBarIcon: ({color}) => (
+            <Ionicons name="time-outline" size={30} color={color} />
+          ),
+        }}
+      />
+      <Tab.Screen
+        name="Komisi"
+        component={Komisi}
+        options={{
+          tabBarIcon: ({color}) => (
+            <Ionicons name="list-outline" size={30} color={color} />
+          ),
+        }}
+      />
+      <Tab.Screen
+        name="TambahPengaduan"
+        component={blank}
+        options={{
+          tabBarLabel: 'Pengaduan',
+          tabBarIcon: () => <AntDesign name="pluscircle" size={25} color={'#C1272D'} />,
+        }}
+        listeners={({navigation}) => ({
+          tabPress:  event => {
+            event.preventDefault()
+            navigation.navigate('Pengaduan')
+          }
+        })}
+      />
+      <Tab.Screen
+        name="Profile"
+        component={profileStack}
+        options={{
+          tabBarIcon: ({color}) => (
+            <Ionicons name="person-outline" size={30} color={color} />
+          ),
+        }}
+      />
+    </Tab.Navigator>
+  );
+};
+
+export default bottomTabNav;
