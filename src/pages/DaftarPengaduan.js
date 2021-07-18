@@ -4,6 +4,7 @@ import {ScrollView, StyleSheet, Text, View, TextInput, TouchableOpacity} from 'r
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import Ionicons from 'react-native-vector-icons/Ionicons'
 import {urlAPI} from '../assets/URLs';
+import Feather from 'react-native-vector-icons/Feather';
 
 const DaftarPengaduan = ({navigation}) => {
   const [data, setData] = useState([]);
@@ -11,26 +12,48 @@ const DaftarPengaduan = ({navigation}) => {
   const [isLiked, setIsLiked] = useState();
   const [isDisliked, setIsDisliked] = useState();
   const [searchInput, setSearchInput] = useState();
+  const [countComments, setCountComments] = useState([])
 
 
   useEffect(() => {
     const unsubscribe = navigation.addListener('focus', () => {
-      axios
-      .get(urlAPI + '/complaint/complaintList')
-      .then(res => {
-        setData(res.data);
-        console.log(res.data[0])
-      })
-      .catch(err => {
-        console.log(err);
-      });
+      getPengaduanData()
+      getCountComments()
     });
     return unsubscribe;
   }, [navigation, data])
 
+  const getPengaduanData = () => {
+    axios
+      .get(urlAPI + '/complaint/complaintList')
+      .then(res => {
+        setData(res.data);
+      })
+      .catch(err => {
+        console.log(err);
+      });
+  }
+
+  const getCountComments = () => {
+    axios.get(urlAPI + '/complaint/countComments')
+    .then(res => {
+      setCountComments(res.data)
+      // console.log(res.data)
+    })
+    .catch(err => console.log(err));
+  }
+
+  const onSubmitSearch = () => {
+    axios.get(urlAPI + `/find/searchComplaint?keywords=${searchInput}`)
+    .then(res => {
+      setData(res.data)
+    })
+    .catch(err => console.log(err));
+  }
+
   const renderData = () => {
     return data.map((key) => (
-      <TouchableOpacity style={styles.complaintWrapper} onPress={() => navigation.navigate('Pengaduan Tunggal', key)}>
+      <TouchableOpacity style={styles.complaintWrapper} onPress={() => navigation.navigate('PengaduanTunggal', key)}>
         <View style={styles.row}>
           <Text style={styles.complainant}>{key.nama_lengkap}</Text>
           <Text style={styles.complaint}>{key.tanggal_pengaduan}</Text>
@@ -64,7 +87,14 @@ const DaftarPengaduan = ({navigation}) => {
           </View>
           <View style={styles.commentWrapper}>
             <AntDesign name="message1" size={25} style={styles.icon} />
-            <Text style={styles.icon}>1</Text>
+            {
+              countComments.map((count) => (
+                key.id_pengaduan == count.id_pengaduan ?
+                <Text style={styles.icon}>{count.jumlahKomentar}</Text>
+                : null
+              ))
+              // <Text style={styles.icon}></Text>
+            }
           </View>
         </View>
       </TouchableOpacity>
@@ -73,8 +103,21 @@ const DaftarPengaduan = ({navigation}) => {
 
   return (
     <View style={styles.container}>
-      <ScrollView>
-        <TextInput value={searchInput} onChangeText={e => setSearchInput(e)} placeholder="Search..." style={styles.input}/>
+      <ScrollView><View>
+        {/* <TextInput
+          // value={isiKomentar}
+          // onChangeText={e => setIsiKomentar(e)}
+          // onSubmitEditing={sendComment}
+          style={styles.input}
+        /> */}
+        <TextInput value={searchInput} onChangeText={e => setSearchInput(e)} placeholder="Search..." style={styles.input} onSubmitEditing={onSubmitSearch}/>
+        <Feather
+          name="search"
+          size={25}
+          onPress={onSubmitSearch}
+          style={styles.searchIcon}
+        />
+      </View>
         {data.length > 0 ? renderData() : <Text style={{...styles.title, textAlign: 'center', marginTop: 150}}>Belum ada pengaduan</Text>}
       </ScrollView>
     </View>
@@ -90,9 +133,10 @@ const styles = StyleSheet.create({
   },
   input: {
     backgroundColor: "white",
-    padding: 15,
+    paddingVertical: 15,
+    paddingHorizontal: 20,
+    paddingRight: 55,
     fontSize: 20,
-
   },
   complaintWrapper: {
     padding: 10,
@@ -141,4 +185,12 @@ const styles = StyleSheet.create({
     margin: 5,
     marginVertical: 10,
   },
+  searchIcon: {
+    top: 15,
+    right: 20,
+    position: 'absolute',
+    zIndex: 9,
+    color: '#C1272D'
+  }
+
 });

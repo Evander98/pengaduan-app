@@ -47,7 +47,7 @@ const Login = ({navigation}) => {
     if (email && sandi) {
       axios.get(urlAPI + '/auth/onLogin', {params: {email, sandi}})
       .then(res => {
-        console.log(res.data)
+        // console.log(res.data)
         res.data.msg
           ? dispatch(ifError(res.data.msg))
           : dispatch(loggedIn(res.data));

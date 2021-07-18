@@ -4,7 +4,10 @@ const INITIAL_STATE = {
   email: '',
   jenisKelamin: 0,
   role: 0,
-  alamat: '',
+  telepon: '',
+  kelurahan: '',
+  kecamatan: '',
+  kodePos: '',
   error: '',
 };
 
@@ -18,7 +21,10 @@ export default (state = INITIAL_STATE, action) => {
         email: action.payload.email,
         jenisKelamin: action.payload.jenis_kelamin,
         role: action.payload.role,
-        alamat: action.payload.alamat,
+        telepon: action.payload.nomor_telepon,
+        kelurahan: action.payload.kelurahan,
+        kecamatan: action.payload.kecamatan,
+        kodePos: action.payload.kode_pos,
       };
     case 'ERROR_MESSAGE':
       return {...INITIAL_STATE, error: action.payload};

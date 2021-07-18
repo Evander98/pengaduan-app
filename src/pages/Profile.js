@@ -34,12 +34,16 @@ const Profile = ({navigation}) => {
         <Text style={styles.name}>{user.namaLengkap}</Text>
       </View>
       <View style={styles.content}>
-        <TouchableOpacity onPress={() => navigation.navigate('UbahProfil')} style={styles.itemsWrapper}>
-          <Text style={styles.text}>Ubah Profil</Text>
-          <View style={styles.iconWrapper}>
-            <MaterialCommunityIcons name='account-edit-outline' size={35} color='#656466'/>
-          </View>
-        </TouchableOpacity>
+        {
+          user.role == 0 ?
+          <TouchableOpacity onPress={() => navigation.navigate('UbahProfil')} style={styles.itemsWrapper}>
+            <Text style={styles.text}>Ubah Profil</Text>
+            <View style={styles.iconWrapper}>
+              <MaterialCommunityIcons name='account-edit-outline' size={35} color='#656466'/>
+            </View>
+          </TouchableOpacity>
+          : null
+        }
         <TouchableOpacity onPress={() => navigation.navigate('Pengaturan')} style={styles.itemsWrapper}>
           <Text style={styles.text}>Pengaturan</Text>
           <View style={styles.iconWrapper}>

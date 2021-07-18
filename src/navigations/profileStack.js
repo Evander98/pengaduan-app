@@ -8,7 +8,7 @@ import Pengaturan from '../pages/Pengaturan'
 const Stack = createStackNavigator() 
 const profileStack = () => {
   return (
-    <Stack.Navigator initialRouteName='Profile' screenOptions={{headerShown: false}}>
+    <Stack.Navigator initialRouteName='Profil' screenOptions={{headerShown: false}}>
       <Stack.Screen component={Profile} name='Profile'/>
       <Stack.Screen component={UbahProfil} name='UbahProfil'/>
       <Stack.Screen component={Pengaturan} name='Pengaturan'/>

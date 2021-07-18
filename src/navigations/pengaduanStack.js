@@ -6,9 +6,9 @@ import PengaduanTunggal from '../pages/PengaduanTunggal'
 const Stack = createStackNavigator()
 const pengaduanStack = () => {
   return (
-    <Stack.Navigator initialRouteName={"Daftar Pengaduan"} screenOptions={{headerShown: false}}>
-      <Stack.Screen component={DaftarPengaduan} name={"Daftar Pengaduan"}/>
-      <Stack.Screen component={PengaduanTunggal} name={"Pengaduan Tunggal"}/>
+    <Stack.Navigator initialRouteName={"DaftarPengaduan"} screenOptions={{headerShown: false}}>
+      <Stack.Screen component={DaftarPengaduan} name={"DaftarPengaduan"}/>
+      <Stack.Screen component={PengaduanTunggal} name={"PengaduanTunggal"}/>
     </Stack.Navigator>
   )
 }

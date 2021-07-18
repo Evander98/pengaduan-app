@@ -1,23 +1,22 @@
 import React from 'react'
-import { StyleSheet, Text, View, ScrollView, Image } from 'react-native'
-
+import { StyleSheet, Text, View, ScrollView, Image, Dimensions } from 'react-native'
+import ArhamEha from '../assets/images/AbramEha.jpg'
+import AnthoniPusung from '../assets/images/AnthoniPusung.jpg'
+import ArlensLengkongPungus from '../assets/images/ArlensLengkongPungus.jpg'
+import ArnolLamuni from '../assets/images/ArnolLamuni.jpg'
+import Azhar from '../assets/images/Azhar.jpg'
 const data  = [
-  '../assets/images/Abram Eha.jpg',
-  '../assets/images/Anthoni Pusung.jpg',
-  '../assets/images/Arlens Lengkong Pungus.jpg',
-  '../assets/images/Arnol Lamuni.jpg',
-  '../assets/images/Azhar.jpg',
-  '../assets/images/Chris Yodi Longdong.jpg',
-  '../assets/images/Cynthia Imelda Erkles.jpg',
-  '../assets/images/Daniel Mathew Rumumpe.jpg',
-  '../assets/images/Denny Kamlon Lolong.jpg',
-  '../assets/images/Edwien Kambey.jpg'
+  ArhamEha,
+  AnthoniPusung,
+  ArlensLengkongPungus,
+  ArnolLamuni,
+  Azhar
 ]
 const DaftarAnggota = () => {
 
   const renderImages = () => {
     return data.map((val, index) => (
-      <Image source={{uri: val}} style={{width: 100, height: 100}}/>
+      <Image source={val} style={styles.image}/>
     ))
   }
   return (
@@ -32,5 +31,10 @@ export default DaftarAnggota
 const styles = StyleSheet.create({
   container: {
     flex: 1
+  },
+  image: {
+    width: Dimensions.get('window').width,
+    height: Dimensions.get('window').width,
+    resizeMode: 'contain',
   }
 })

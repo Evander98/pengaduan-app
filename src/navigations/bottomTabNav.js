@@ -18,6 +18,7 @@ const blank = () => <View style={{flex: 1}}/>
 
 const bottomTabNav = ({navigation}) => {
   const user = useSelector(state => state.user)
+
   useEffect(() => {
     if(user.id == 0){
       navigation.dispatch(CommonActions.reset({
@@ -46,20 +47,24 @@ const bottomTabNav = ({navigation}) => {
           ),
         }}
       />
-      <Tab.Screen
-        name="TambahPengaduan"
-        component={blank}
-        options={{
-          tabBarLabel: 'Pengaduan',
-          tabBarIcon: () => <AntDesign name="pluscircle" size={25} color={'#C1272D'} />,
-        }}
-        listeners={({navigation}) => ({
-          tabPress:  event => {
-            event.preventDefault()
-            navigation.navigate('Pengaduan')
-          }
-        })}
-      />
+      {
+        user.role == 0 ?
+        <Tab.Screen
+          name="TambahPengaduan"
+          component={blank}
+          options={{
+            tabBarLabel: 'Pengaduan',
+            tabBarIcon: () => <AntDesign name="pluscircle" size={25} color={'#C1272D'} />,
+          }}
+          listeners={({navigation}) => ({
+            tabPress:  event => {
+              event.preventDefault()
+              navigation.navigate('Pengaduan')
+            }
+          })}
+        />
+        : null
+      }
       <Tab.Screen
         name="Profile"
         component={profileStack}
