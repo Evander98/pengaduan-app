@@ -26,7 +26,7 @@ const TambahPengaduan = () => {
 
   useEffect(() => {
     if (isError) {
-      Alert.alert('Pemberitahuan', isError, [
+      Alert.alert('Pemberitahuan!', isError, [
         {
           text: 'OK',
           onPress: clearInputs,
@@ -54,18 +54,23 @@ const TambahPengaduan = () => {
   }
 
   const onSubmit = () => {
-    if (judul && isi && selected > 0) {
-      axios
-        .post(urlAPI + '/complaint/addComplaint', {id: user.id, judul, isi, mitra: selected})
-        .then(res => {
-          setIsError(res.data);
-        })
-        .catch(err => {
-          // setIsError(err)
-          console.log(err);
-        });
-    } else {
-      setIsError('Tolong masukan judul, isi dan bidang pengaduan!');
+    if(user.kecamatan && user.kelurahan && user.kodePos && user.telepon && user.nik){
+      if (judul && isi && selected > 0) {
+        axios
+          .post(urlAPI + '/complaint/addComplaint', {id: user.id, judul, isi, mitra: selected})
+          .then(res => {
+            setIsError(res.data);
+          })
+          .catch(err => {
+            // setIsError(err)
+            console.log(err);
+          });
+      } else{
+        setIsError('Tolong masukan judul, isi dan bidang pengaduan!');
+      }
+    }else{
+      setIsError('Tolong lengkapi data diri anda pada menu ubah profil!');
+      
     }
   };
 

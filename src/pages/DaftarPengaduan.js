@@ -1,8 +1,15 @@
 import axios from 'axios';
 import React, {useState, useEffect} from 'react';
-import {ScrollView, StyleSheet, Text, View, TextInput, TouchableOpacity} from 'react-native';
+import {
+  ScrollView,
+  StyleSheet,
+  Text,
+  View,
+  TextInput,
+  TouchableOpacity,
+} from 'react-native';
 import AntDesign from 'react-native-vector-icons/AntDesign';
-import Ionicons from 'react-native-vector-icons/Ionicons'
+import Ionicons from 'react-native-vector-icons/Ionicons';
 import {urlAPI} from '../assets/URLs';
 import Feather from 'react-native-vector-icons/Feather';
 
@@ -12,16 +19,15 @@ const DaftarPengaduan = ({navigation}) => {
   const [isLiked, setIsLiked] = useState();
   const [isDisliked, setIsDisliked] = useState();
   const [searchInput, setSearchInput] = useState();
-  const [countComments, setCountComments] = useState([])
-
+  const [countComments, setCountComments] = useState([]);
 
   useEffect(() => {
     const unsubscribe = navigation.addListener('focus', () => {
-      getPengaduanData()
-      getCountComments()
+      getPengaduanData();
+      getCountComments();
     });
     return unsubscribe;
-  }, [navigation, data])
+  }, [navigation, data]);
 
   const getPengaduanData = () => {
     axios
@@ -32,28 +38,34 @@ const DaftarPengaduan = ({navigation}) => {
       .catch(err => {
         console.log(err);
       });
-  }
+  };
 
   const getCountComments = () => {
-    axios.get(urlAPI + '/complaint/countComments')
-    .then(res => {
-      setCountComments(res.data)
-      // console.log(res.data)
-    })
-    .catch(err => console.log(err));
-  }
+    axios
+      .get(urlAPI + '/complaint/countComments')
+      .then(res => {
+        setCountComments(res.data);
+        // console.log(res.data)
+      })
+      .catch(err => console.log(err));
+  };
 
   const onSubmitSearch = () => {
-    axios.get(urlAPI + `/find/searchComplaint?keywords=${searchInput}`)
-    .then(res => {
-      setData(res.data)
-    })
-    .catch(err => console.log(err));
-  }
+    axios
+      .get(urlAPI + `/find/searchComplaint?keywords=${searchInput}`)
+      .then(res => {
+        setData(res.data);
+        console.log(res.data);
+      })
+      .catch(err => console.log(err));
+  };
 
   const renderData = () => {
-    return data.map((key) => (
-      <TouchableOpacity style={styles.complaintWrapper} onPress={() => navigation.navigate('PengaduanTunggal', key)}>
+    return data.map((key, index) => (
+      <TouchableOpacity
+        key={index}
+        style={styles.complaintWrapper}
+        onPress={() => navigation.navigate('PengaduanTunggal', key)}>
         <View style={styles.row}>
           <Text style={styles.complainant}>{key.nama_lengkap}</Text>
           <Text style={styles.complaint}>{key.tanggal_pengaduan}</Text>
@@ -64,8 +76,16 @@ const DaftarPengaduan = ({navigation}) => {
           <Text style={styles.status}>{key.nama_mitra_kerja}</Text>
         </View>
         <View style={styles.wrapper}>
-          <Ionicons name={'time-outline'} size={25}/>
-          <Text style={styles.status}>{key.status == 0 ? 'Belum diterima' : key.status == 1 ? 'Diterima' : key.status == 2 ? 'Selesai' : "Terjadi kesalahan"}</Text>
+          <Ionicons name={'time-outline'} size={25} />
+          <Text style={styles.status}>
+            {key.status == 0
+              ? 'Belum diterima'
+              : key.status == 1
+              ? 'Diterima'
+              : key.status == 2
+              ? 'Selesai'
+              : 'Terjadi kesalahan'}
+          </Text>
         </View>
         <View style={styles.wrapper}>
           <View style={styles.likeWrapper}>
@@ -85,14 +105,21 @@ const DaftarPengaduan = ({navigation}) => {
             /> */}
             {/* <Text style={styles.icon}>0</Text> */}
           </View>
+          {
+            key.similarity ?
+            <View style={styles.likeWrapper}>
+              <Text>{key.similarity.toFixed(2)}</Text>
+            </View>
+            : null
+          }
           <View style={styles.commentWrapper}>
             <AntDesign name="message1" size={25} style={styles.icon} />
             {
-              countComments.map((count) => (
-                key.id_pengaduan == count.id_pengaduan ?
-                <Text style={styles.icon}>{count.jumlahKomentar}</Text>
-                : null
-              ))
+              countComments.map(count =>
+                key.id_pengaduan == count.id_pengaduan ? (
+                  <Text style={styles.icon}>{count.jumlahKomentar}</Text>
+                ) : null,
+              )
               // <Text style={styles.icon}></Text>
             }
           </View>
@@ -103,22 +130,29 @@ const DaftarPengaduan = ({navigation}) => {
 
   return (
     <View style={styles.container}>
-      <ScrollView><View>
-        {/* <TextInput
-          // value={isiKomentar}
-          // onChangeText={e => setIsiKomentar(e)}
-          // onSubmitEditing={sendComment}
-          style={styles.input}
-        /> */}
-        <TextInput value={searchInput} onChangeText={e => setSearchInput(e)} placeholder="Search..." style={styles.input} onSubmitEditing={onSubmitSearch}/>
-        <Feather
-          name="search"
-          size={25}
-          onPress={onSubmitSearch}
-          style={styles.searchIcon}
-        />
-      </View>
-        {data.length > 0 ? renderData() : <Text style={{...styles.title, textAlign: 'center', marginTop: 150}}>Belum ada pengaduan</Text>}
+      <ScrollView>
+        <View>
+          <TextInput
+            value={searchInput}
+            onChangeText={e => setSearchInput(e)}
+            placeholder="Search..."
+            style={styles.input}
+            onSubmitEditing={onSubmitSearch}
+          />
+          <Feather
+            name="search"
+            size={25}
+            onPress={onSubmitSearch}
+            style={styles.searchIcon}
+          />
+        </View>
+        {data.length > 0 ? (
+          renderData()
+        ) : (
+          <Text style={{...styles.title, textAlign: 'center', marginTop: 150}}>
+            Belum ada pengaduan
+          </Text>
+        )}
       </ScrollView>
     </View>
   );
@@ -132,7 +166,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#DBDBDB',
   },
   input: {
-    backgroundColor: "white",
+    backgroundColor: 'white',
     paddingVertical: 15,
     paddingHorizontal: 20,
     paddingRight: 55,
@@ -145,7 +179,7 @@ const styles = StyleSheet.create({
   },
   row: {
     flexDirection: 'row',
-    justifyContent: 'space-between'
+    justifyContent: 'space-between',
   },
   complainant: {
     fontWeight: 'bold',
@@ -159,18 +193,18 @@ const styles = StyleSheet.create({
   },
   complaint: {
     fontSize: 16,
-    marginBottom: 10
+    marginBottom: 10,
   },
   wrapper: {
     flexDirection: 'row',
     borderTopWidth: 1,
     borderBottomWidth: 1,
     borderColor: 'grey',
-    alignItems: 'center'
+    alignItems: 'center',
   },
   status: {
     fontSize: 18,
-    margin: 10
+    margin: 10,
   },
   likeWrapper: {
     flex: 1,
@@ -178,6 +212,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   commentWrapper: {
+    // flex: 1,
     flexDirection: 'row',
     alignItems: 'center',
   },
@@ -190,7 +225,6 @@ const styles = StyleSheet.create({
     right: 20,
     position: 'absolute',
     zIndex: 9,
-    color: '#C1272D'
-  }
-
+    color: '#C1272D',
+  },
 });

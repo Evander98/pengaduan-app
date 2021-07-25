@@ -10,6 +10,7 @@ import AntDesign from 'react-native-vector-icons/AntDesign'
 import TopTabNav from './topTabNav';
 import Komisi from './komisiTabNav';
 import profileStack from './profileStack';
+import Statistik from '../pages/Statistik';
 
 const Tab = createBottomTabNavigator();
 
@@ -65,6 +66,15 @@ const bottomTabNav = ({navigation}) => {
         />
         : null
       }
+      <Tab.Screen
+        name="Statistik"
+        component={Statistik}
+        options={{
+          tabBarIcon: ({color}) => (
+            <Ionicons name="stats-chart-outline" size={30} color={color} />
+          ),
+        }}
+      />
       <Tab.Screen
         name="Profile"
         component={profileStack}

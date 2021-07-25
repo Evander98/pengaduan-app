@@ -46,7 +46,7 @@ const Informasi = ({navigation}) => {
 
   const renderItems = () => {
     return list.map((key, index) => (
-      <TouchableOpacity style={styles.itemWrapper} onPress={() => navigation.navigate(key.title)}>
+      <TouchableOpacity key={index} style={styles.itemWrapper} onPress={() => navigation.navigate(key.linkTo)}>
         <Ionicons name={key.icon} size={45} color='#C1272D'/>
         <Text style={styles.label}>{key.title}</Text>
         <Ionicons name='arrow-forward-circle' size={30} />

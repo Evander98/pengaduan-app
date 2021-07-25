@@ -1,5 +1,5 @@
-import React, { useEffect } from 'react';
-import { StyleSheet, Text, View, ScrollView } from 'react-native'
+import React, { useEffect, useState } from 'react';
+import { StyleSheet, Text, View, ScrollView, TouchableOpacity } from 'react-native'
 import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs'
 import {LogBox} from 'react-native';
 import axios from 'axios';
@@ -7,98 +7,59 @@ import { urlAPI } from '../assets/URLs';
 
 const TopTab = createMaterialTopTabNavigator()
 
-const komisi = [
-  {
-    nama: 'Komisi 1',
-    mitraKerja: [
-      'Sekretariat DPRD',
-      'Inspektorat',
-      'Badan Kepegawaian Serta Pendidikan dan Pelatihan',
-      "Dinas Pendidikan",
-      'Dinas Administrasi Kependudukan dan Pencatatan Sipil',
-      'Dinas Kepemudaan dan Olahraga',
-      'Dinas Kearsipan',
-      'Satuan Polisi Pamong Praja dan Kebakaran',
-      'Bagian Pemerintah', 
-      'Bagian Hukum',
-      'Bagian Organisasi',
-      'Bagian Hukum',
-      'Bagian Tata Usaha Pimpinan',
-      'Bagian Umum',
-      'Kecamatan Kema',
-      'Kecamatan Kauditan',
-      'Kecamatan Airmadidi',
-      'kecamatan kalawat',
-      'Kecamatan dimembe',
-      'Kecamatan talawaan',
-      'Kecamatan Wori',
-      'Kecamatan Likupang Barat, likupang timur, likupang selatan'
-    ]
-  },
-  {
-    nama: "Komisi II",
-    mitraKerja: [
-      'Badan Perencanaan Penelitian dan Pengembangan  Daerah',
-      'Dinas Pekerjaan Umum dan Penataan Ruang',
-      'Dinas Perumahan Rakyat dan Kawasan Pemukiman',
-      'Dinas Perhubungan',
-      'Dinas Pangan',
-      'Dinas Lingkungan Hidup',
-      'Dinas Komunikasi dan Informatika serta Persandian', 
-      'Dinas Perdagangan',
-      'Dinas Perindustrian',
-      'Dinas Pembangunan',
-      'Dinas Pengadaan barang dan jasa',
-      'Bagian Perekonomian'
-    ]
-  },
-  {
-    nama: "Komisi III",
-    mitraKerja: [
-      'Badan Keuangan dan aset Daerah',
-      'Badan Penanggulangan Bencana Daerah',
-      'Dinas Sosial serta Pemberdayaan Masyarakat Desa',
-      'Dinas Kesehatan',
-      'Dinas Pemberdayaan Perempuan dan Perlindungan Anak',
-      'Dinas Tenaga Kerja',
-      'Dinas Penanaman Modal dan PTSP', 
-      'Dinas Kelautan dan Perikanan',
-      'Dinas Pariwisata',
-      'Dinas Pertanian',
-      'Dinas Pengendalian Penduduk dan Keluarga Berencana',
-      'Bagian Kesejatraan Rakyat',
-      'Bagian Keuangan',
-      'Perusahaan Umum Daerah Klabat',
-      'Perusahaan Daerah Air Minum',
-      'RSUD Maria Walanda Maramis',
-    ]
-  },
-]
-
-const komisiTabNav = () => {
+const komisiTabNav = ({navigation}) => {
   LogBox.ignoreAllLogs();
 
-  // useEffect(() => {
-  //   axios.get(urlAPI + '/partner/getPartners')
-  //   .then(res => {
-  //     console.log(res.data)
-  //   })
-  // }, [])
+  const [data, setData] = useState(() =>([]))
+  const [count, setCount] = useState(() =>([]))
+
+  useEffect(() => {
+    const unsubscribe = navigation.addListener('focus', () => {
+      getData()
+      getCount()
+    });
+    return unsubscribe;
+  }, [navigation])
+
+  const getData = () => {
+    axios.get(urlAPI + '/partner/getAll')
+      .then(res => {
+        setData(res.data)
+      })
+      .catch(err => console.log(err))
+  }
+
+  const getCount = () => {
+    axios.get(urlAPI + '/complaint/countComplaintByPartner')
+    .then(res => {
+      setCount(res.data)
+    })
+    .catch(err => console.log(err))
+  }
   
   const renderTopTab = () => {
-    return komisi.map((key, index) => (
-      <TopTab.Screen component={() => (
-        <ScrollView style={styles.container}>
-          {
-            key.mitraKerja.map((mitra, idx) => (
-              <View key={idx} style={styles.itemWrapper}>
-                <Text style={styles.text}>{mitra}</Text>
-              </View>
-            ))
-          }
-        </ScrollView>
-      )} name={key.nama}/>
-    ))
+    // console.log(data[0])
+    var view = data.map(key => {
+        return <TopTab.Screen key={key.idKomisi} name={key.namaKomisi}>
+          {props => <ScrollView {...props} style={styles.container}>
+            {
+              key.mitraKerja.map(mitra => (
+                <TouchableOpacity key={mitra.idMitraKerja} style={styles.itemWrapper} onPress={() => console.log("masuk")}>
+                  <Text style={styles.text}>{mitra.namaMitraKerja}</Text>
+                  {
+                    count.map(count => (
+                      count.id_mitra == mitra.idMitraKerja ?
+                      <Text style={styles.text}>{count.count}</Text>
+                      : null
+                    ))
+                  }
+                </TouchableOpacity>
+              ))
+            }
+          </ScrollView>}
+        </TopTab.Screen>
+    })
+    return view
   }
 
   return (
@@ -109,7 +70,13 @@ const komisiTabNav = () => {
       indicatorStyle: {backgroundColor: '#C1272D'},
       labelStyle: {fontSize: 14},
     }}>
-      {renderTopTab()}
+      {
+        data.length > 0 ? renderTopTab()
+        :
+        <TopTab.Screen name="LOADING">
+          {() => <View><Text>Loading...</Text></View>}
+        </TopTab.Screen>
+      }
     </TopTab.Navigator>
   )
 }
