@@ -45,7 +45,7 @@ const PengaduanTunggal = ({navigation, route}) => {
           `/complaint/updateStatus?id=${id_pengaduan}&status=${statusValue}`,
       )
       .then(res => {
-        console.log(res.data);
+        // console.log(res.data);
       })
       .catch(err => {
         console.log(err);
@@ -69,7 +69,7 @@ const PengaduanTunggal = ({navigation, route}) => {
 
   const renderComment = () => {
     return daftarKomentar.map((key, index) => (
-      <View style={styles.commentWrapper}>
+      <View key={index} style={styles.commentWrapper}>
         <Text style={styles.complainant}>{key.nama_lengkap}</Text>
         <Text style={styles.complaint}>{key.isi_komentar}</Text>
       </View>
