@@ -34,7 +34,7 @@ const Login = ({navigation}) => {
 
   useEffect(() => {
     if (user.error) {
-      Alert.alert('Alert', user.error, [
+      Alert.alert('Pesan Peringatan', user.error, [
         {
           text: 'OK',
           onPress: () => dispatch(ifError('')),

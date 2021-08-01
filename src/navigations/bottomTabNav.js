@@ -31,7 +31,7 @@ const bottomTabNav = ({navigation}) => {
   return (
     <Tab.Navigator tabBarOptions={{activeTintColor: '#C1272D', labelStyle: {fontSize: 13}}}>
       <Tab.Screen
-        name="Home"
+        name="Beranda"
         component={TopTabNav}
         options={{
           tabBarIcon: ({color}) => (
@@ -76,7 +76,7 @@ const bottomTabNav = ({navigation}) => {
         }}
       />
       <Tab.Screen
-        name="Profile"
+        name="Profil"
         component={profileStack}
         options={{
           tabBarIcon: ({color}) => (

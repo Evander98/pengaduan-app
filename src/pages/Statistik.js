@@ -35,22 +35,26 @@ const Statistik = ({navigation}) => {
   
   return (
     <View style={styles.container}>
-      {
-        data.length > 0 ?
-        <PieChart
-          data={data}
-          width={Dimensions.get("window").width - 40}
-          height={220}
-          chartConfig={{
-            color: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,
-            labelColor: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,
-          }}
-          accessor={"count"}
-          backgroundColor={"transparent"}
-          // absolute
-        />
-        : <Text>Loading...</Text>
-      }
+      <Text style={styles.title}>Data Rekapan Pengaduan Berdasarkan Mitra Kerja</Text>
+      <View style={styles.chart}>
+        {
+          data.length > 0 ?
+          <PieChart
+            data={data}
+            width={Dimensions.get("window").width - 40}
+            height={220}
+            chartConfig={{
+              color: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,
+              labelColor: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,
+            }}
+            accessor={"count"}
+            backgroundColor={"transparent"}
+            // absolute
+          />
+          : <Text>Loading...</Text>
+        }
+
+      </View>
     </View>
   )
 }
@@ -61,6 +65,14 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     padding: 10,
+  },
+  title: {
+    textAlign: 'center',
+    fontSize: 26,
+  },
+  chart:{
+    flex: 1,
     justifyContent: 'center'
+    
   }
 })

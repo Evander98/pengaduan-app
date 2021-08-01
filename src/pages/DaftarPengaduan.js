@@ -15,7 +15,7 @@ import Feather from 'react-native-vector-icons/Feather';
 
 const DaftarPengaduan = ({navigation}) => {
   const [data, setData] = useState([]);
-  const [like, setLike] = useState(0);
+  const [like, setLike] = useState();
   const [isLiked, setIsLiked] = useState();
   const [isDisliked, setIsDisliked] = useState();
   const [searchInput, setSearchInput] = useState();
@@ -89,13 +89,13 @@ const DaftarPengaduan = ({navigation}) => {
         </View>
         <View style={styles.wrapper}>
           <View style={styles.likeWrapper}>
-            <AntDesign
+            {/* <AntDesign
               name={isLiked ? 'like1' : 'like2'}
               size={25}
               color={isLiked ? '#C1272D' : 'black'}
               style={styles.icon}
               onPress={() => setIsLiked(prevState => !prevState)}
-            />
+            /> */}
             <Text style={styles.icon}>{like}</Text>
             {/* <AntDesign
               name={isDisliked ? 'dislike1' : 'dislike2'}

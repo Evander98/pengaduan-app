@@ -22,20 +22,20 @@ const Welcome = ({navigation}) => {
     <Container colors={['#B7753E', '#C1272D', '#C1272D']}>
       <Wrapper>
         <Text welcome>Selamat datang di</Text>
-        <Text title>DPRD Now!</Text>
+        <Text title>DPRD MINUT!</Text>
         <Text>
-          Disinilah tempat untuk mencurahkan aspirasi dan pengaduan kepada DPRD.
+          Tempat untuk mencurahkan aspirasi dan pengaduan kepada DPRD.
         </Text>
       </Wrapper>
       <Wrapper>
         <Button onPress={() => navigation.navigate('Login')}>
           <IconFontisto name='email' size={18} color='white'/>
-          <Text>Login with email</Text>
+          <Text>Masuk</Text>
         </Button>
         <Wrapper inline>
-          <Text>Belum pernah mendaftar?</Text>
+          <Text>Jika Belum Memiliki Akun,</Text>
           <RegisterButton onPress={() => navigation.navigate('Register')}>
-            <Text register>Daftar disini</Text>
+            <Text register>Daftar disini!</Text>
           </RegisterButton>
         </Wrapper>
       </Wrapper>

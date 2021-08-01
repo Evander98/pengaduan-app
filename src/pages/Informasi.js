@@ -18,7 +18,7 @@ const list = [
   {
     key: 3,
     title: 'Naskah Akademik',
-    linkTo: 'Akademik',
+    linkTo: 'Naskah',
     icon: 'book-outline'
   },
   {
