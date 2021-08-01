@@ -16,7 +16,7 @@ const DaftarAnggota = () => {
 
   const renderImages = () => {
     return data.map((val, index) => (
-      <Image source={val} style={styles.image}/>
+      <Image key={index} source={val} style={styles.image}/>
     ))
   }
   return (

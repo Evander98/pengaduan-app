@@ -2,37 +2,44 @@ import axios from 'axios'
 import React, { useState } from 'react'
 import { useEffect } from 'react'
 import { ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View, Alert } from 'react-native'
-import { useSelector } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { urlAPI } from '../assets/URLs'
+import { loggedIn } from '../actions'
+import { Picker } from '@react-native-picker/picker'
 
 const UbahProfil = ({navigation}) => {
   const [namaLengkap, setNamaLengkap] = useState('')
   const [email, setEmail] = useState('')
   const [telepon, setTelepon] = useState('')
+  const [jenisKelamin, setJenisKelamin] = useState()
   const [kelurahan, setKelurahan] = useState('')
   const [kecamatan, setKecamatan] = useState('')
   const [kodePos, setKodePos] = useState('')
+  const [nik, setNik] = useState('')
   const [isError, setIsError] = useState();
 
 
   const user = useSelector(state => state.user)
+  const dispatch = useDispatch()
 
   useEffect(() => {
     const unsubscribe = navigation.addListener('focus', () => {
-      console.log(user)
+      // console.log(user)
       setNamaLengkap(user.namaLengkap)
       setEmail(user.email)
       setTelepon(user.telepon)
+      setJenisKelamin(user.jenisKelamin)
       setKelurahan(user.kelurahan)
       setKecamatan(user.kecamatan)
       setKodePos(user.kodePos)
+      setNik(user.nik)
     });
     return unsubscribe;
   }, [navigation])
   
   useEffect(() => {
     if (isError) {
-      Alert.alert('Pemberitahuan', isError, [
+      Alert.alert('Pemberitahuan!', isError, [
         {
           text: 'OK',
           onPress: () => setIsError(''),
@@ -42,25 +49,31 @@ const UbahProfil = ({navigation}) => {
   }, [isError]);
 
   const onProfileSubmit = () => {
-    if(namaLengkap && email && telepon && kelurahan && kecamatan && kodePos){
+    if(namaLengkap && email && telepon && kelurahan && kecamatan && kodePos && nik && jenisKelamin){
       var data = {
         nama_lengkap: namaLengkap,
         email,
         nomor_telepon: telepon,
+        jenis_kelamin: jenisKelamin,
         kelurahan,
         kecamatan,
-        kode_pos: kodePos
+        kode_pos: kodePos,
+        nik
       };
       axios.put(`${urlAPI}/user/editProfile?id=${user.id}`, data)
       .then(res => {
-        console.log(res.data)
+        // console.log(res.data)
         setNamaLengkap(res.data.nama_lengkap)
         setEmail(res.data.email)
         setTelepon(res.data.nomor_telepon)
+        setJenisKelamin(res.data.jenis_kelamin)
         setKelurahan(res.data.kelurahan)
         setKecamatan(res.data.kecamatan)
         setKodePos(res.data.kode_pos)
+        setNik(res.data.nik)
+        dispatch(loggedIn(res.data))
         setIsError('Data berhasil diedit!')
+
       })
       .catch(err => {
         console.log(err)
@@ -79,6 +92,12 @@ const UbahProfil = ({navigation}) => {
           <TextInput value={kelurahan} onChangeText={e => setKelurahan(e)} placeholder="Kelurahan" style={styles.textInput}/>
           <TextInput value={kecamatan} onChangeText={e => setKecamatan(e)} placeholder="Kecamatan" style={styles.textInput}/>
           <TextInput value={kodePos} keyboardType='numeric' onChangeText={e => setKodePos(e)} placeholder="Kode Pos" style={styles.textInput}/>
+          <TextInput value={nik} keyboardType='numeric' onChangeText={e => setNik(e)} placeholder="Nomor Induk Kependudukan" style={styles.textInput}/>
+          <Picker selectedValue={jenisKelamin} onValueChange={e => setJenisKelamin(e)}>
+            <Picker.Item label="Jenis Kelamin" value={0}/>
+            <Picker.Item label="Pria" value={1}/>
+            <Picker.Item label="Wanita" value={2}/>
+          </Picker>
         </View>
         <TouchableOpacity onPress={onProfileSubmit} style={styles.button}>
           <Text style={styles.buttonText}>Simpan</Text>
