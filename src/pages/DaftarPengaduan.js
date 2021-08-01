@@ -55,7 +55,7 @@ const DaftarPengaduan = ({navigation}) => {
       .get(urlAPI + `/find/searchComplaint?keywords=${searchInput}`)
       .then(res => {
         setData(res.data);
-        console.log(res.data);
+        // console.log(res.data);
       })
       .catch(err => console.log(err));
   };
@@ -147,7 +147,14 @@ const DaftarPengaduan = ({navigation}) => {
           />
         </View>
         {data.length > 0 ? (
-          renderData()
+          <View>
+            {
+              data[0].hasOwnProperty('similarity') ? 
+              <Text style={styles.status}>{"Menemukan " + data.length + " hasil"}</Text>
+              : null
+            }
+            {renderData()}
+          </View>
         ) : (
           <Text style={{...styles.title, textAlign: 'center', marginTop: 150}}>
             Belum ada pengaduan
