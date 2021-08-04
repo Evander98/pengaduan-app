@@ -51,13 +51,17 @@ const DaftarPengaduan = ({navigation}) => {
   };
 
   const onSubmitSearch = () => {
-    axios
-      .get(urlAPI + `/find/searchComplaint?keywords=${searchInput}`)
-      .then(res => {
-        setData(res.data);
-        // console.log(res.data);
-      })
-      .catch(err => console.log(err));
+    if(searchInput){
+      axios
+        .get(urlAPI + `/find/searchComplaint?keywords=${searchInput}`)
+        .then(res => {
+          setData(res.data);
+          // console.log(res.data);
+        })
+        .catch(err => console.log(err));
+    }else{
+      getPengaduanData()
+    }
   };
 
   const renderData = () => {
