@@ -32,7 +32,7 @@ const index = () => {
           options={{headerShown: false}}
         />
         <Stack.Screen name="Login" component={Login} options={{headerTitle: 'Masuk'}}/>
-        <Stack.Screen name="Register" component={Register} />
+        <Stack.Screen name="Register" component={Register} options={{headerTitle: 'Registrasi'}}/>
         <Stack.Screen name="Home" component={HomeBottomTab} options={{headerTitle: 'DPRD Minut'}}/>
         <Stack.Screen name="Pengaduan" component={TambahPengaduan} />
         <Stack.Screen name="SyaratKetentuan" component={SyaratKetentuan} options={{headerTitle: 'Syarat dan Ketentuan'}}/>
