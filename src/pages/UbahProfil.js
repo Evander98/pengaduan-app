@@ -50,34 +50,41 @@ const UbahProfil = ({navigation}) => {
 
   const onProfileSubmit = () => {
     if(namaLengkap && email && telepon && kelurahan && kecamatan && kodePos && nik && jenisKelamin){
-      var data = {
-        nama_lengkap: namaLengkap,
-        email,
-        nomor_telepon: telepon,
-        jenis_kelamin: jenisKelamin,
-        kelurahan,
-        kecamatan,
-        kode_pos: kodePos,
-        nik
-      };
-      axios.put(`${urlAPI}/user/editProfile?id=${user.id}`, data)
-      .then(res => {
-        // console.log(res.data)
-        setNamaLengkap(res.data.nama_lengkap)
-        setEmail(res.data.email)
-        setTelepon(res.data.nomor_telepon)
-        setJenisKelamin(res.data.jenis_kelamin)
-        setKelurahan(res.data.kelurahan)
-        setKecamatan(res.data.kecamatan)
-        setKodePos(res.data.kode_pos)
-        setNik(res.data.nik)
-        dispatch(loggedIn(res.data))
-        setIsError('Data berhasil diedit!')
-
-      })
-      .catch(err => {
-        console.log(err)
-      })
+      if(nik.length == 16){
+        if(telepon.length > 9 && telepon.length < 14){
+          var data = {
+            nama_lengkap: namaLengkap,
+            email,
+            nomor_telepon: telepon,
+            jenis_kelamin: jenisKelamin,
+            kelurahan,
+            kecamatan,
+            kode_pos: kodePos,
+            nik
+          };
+          axios.put(`${urlAPI}/user/editProfile?id=${user.id}`, data)
+          .then(res => {
+            setNamaLengkap(res.data.nama_lengkap)
+            setEmail(res.data.email)
+            setTelepon(res.data.nomor_telepon)
+            setJenisKelamin(res.data.jenis_kelamin)
+            setKelurahan(res.data.kelurahan)
+            setKecamatan(res.data.kecamatan)
+            setKodePos(res.data.kode_pos)
+            setNik(res.data.nik)
+            dispatch(loggedIn(res.data))
+            setIsError('Data berhasil diedit!')
+    
+          })
+          .catch(err => {
+            console.log(err)
+          })
+        }else{
+          setIsError('Nomor telepon tidak sesuai!')
+        }
+      }else{
+        setIsError('NIK tidak sesuai, mohon periksa kembali!')
+      }
     }else{
       setIsError('Mohon untuk mengisi semua data yang diperlukan!')
     }
