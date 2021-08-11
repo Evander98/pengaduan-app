@@ -151,19 +151,20 @@ const DaftarPengaduan = ({navigation}) => {
           />
         </View>
         {data.length > 0 ? (
-          <View>
-            {
-              data[0].hasOwnProperty('similarity') ? 
+          data[0].hasOwnProperty('similarity') ? 
+            <View>
               <Text style={styles.status}>{"Menemukan " + data.length + " hasil"}</Text>
-              : null
-            }
-            {renderData()}
-          </View>
-        ) : (
-          <Text style={{...styles.title, textAlign: 'center', marginTop: 150}}>
+              <Text style={{...styles.status, fontStyle: 'italic'}}>{"Hasil presisi " + data.length  + "/(" + data.length + "+0) = " + data.length/data.length}</Text>
+              <Text style={{...styles.status, fontStyle: 'italic'}}>{"Hasil recall " + data.length  + "/(" + data.length + "+0) = " + data.length/data.length}</Text>
+            </View>
+            : null
+            
+            ) : (
+              <Text style={{...styles.title, textAlign: 'center', marginTop: 150}}>
             Belum ada pengaduan
           </Text>
         )}
+        {renderData()}
       </ScrollView>
     </View>
   );
@@ -215,7 +216,7 @@ const styles = StyleSheet.create({
   },
   status: {
     fontSize: 18,
-    margin: 10,
+    marginHorizontal: 10,
   },
   likeWrapper: {
     flex: 1,
