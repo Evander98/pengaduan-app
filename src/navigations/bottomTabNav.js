@@ -6,11 +6,13 @@ import { useSelector } from 'react-redux';
 
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import AntDesign from 'react-native-vector-icons/AntDesign'
+import FontAwesome5 from 'react-native-vector-icons/FontAwesome5'
 
 import TopTabNav from './topTabNav';
 import Komisi from './komisiTabNav';
 import profileStack from './profileStack';
 import Statistik from '../pages/Statistik';
+import DaftarPengguna from '../pages/DaftarPengguna';
 
 const Tab = createBottomTabNavigator();
 
@@ -48,6 +50,20 @@ const bottomTabNav = ({navigation}) => {
           ),
         }}
       />
+      {
+        user.role == 1 ?
+        <Tab.Screen
+          name="DaftarPengguna"
+          component={DaftarPengguna}
+          options={{
+            tabBarLabel: 'Pengguna',
+            tabBarIcon: ({color}) => (
+              <FontAwesome5 name="users" size={25} color={color} />
+            ),
+          }}
+        />
+        : null
+      }
       {
         user.role == 0 ?
         <Tab.Screen

@@ -12,7 +12,9 @@ const UbahProfil = ({navigation}) => {
   const [email, setEmail] = useState('')
   const [telepon, setTelepon] = useState('')
   const [jenisKelamin, setJenisKelamin] = useState()
+  const [daftarKelurahan, setDaftarKelurahan] = useState([])
   const [kelurahan, setKelurahan] = useState('')
+  const [daftarKecamatan, setDaftarKecamatan] = useState([])
   const [kecamatan, setKecamatan] = useState('')
   const [kodePos, setKodePos] = useState('')
   const [nik, setNik] = useState('')
@@ -24,15 +26,26 @@ const UbahProfil = ({navigation}) => {
 
   useEffect(() => {
     const unsubscribe = navigation.addListener('focus', () => {
-      // console.log(user)
-      setNamaLengkap(user.namaLengkap)
-      setEmail(user.email)
-      setTelepon(user.telepon)
-      setJenisKelamin(user.jenisKelamin)
-      setKelurahan(user.kelurahan)
-      setKecamatan(user.kecamatan)
-      setKodePos(user.kodePos)
-      setNik(user.nik)
+      console.log(user)
+      axios.get(`${urlAPI}/user/getSubdistrict`)
+      .then(res => {
+        axios.get(`${urlAPI}/user/getWard?nama_kecamatan='${user.kecamatan}'`)
+        .then(res2 => {
+          setDaftarKecamatan(res.data)
+          setDaftarKelurahan(res2.data)
+
+          setNamaLengkap(user.namaLengkap)
+          setEmail(user.email)
+          setTelepon(user.telepon)
+          setJenisKelamin(user.jenisKelamin)
+          setKelurahan(user.kelurahan)
+          setKecamatan(user.kecamatan)
+          setKodePos(user.kodePos)
+          setNik(user.nik)
+        })
+        .catch(err => console.log(err))
+      })
+      .catch(err => console.log(err))
     });
     return unsubscribe;
   }, [navigation])
@@ -47,6 +60,14 @@ const UbahProfil = ({navigation}) => {
       ]);
     }
   }, [isError]);
+
+  const onKecamatanChanged = (e) => {
+    setKecamatan(e)
+    axios.get(`${urlAPI}/user/getWard?nama_kecamatan='${e}'`)
+    .then(res => {
+      setDaftarKelurahan(res.data)
+    })
+  }
 
   const onProfileSubmit = () => {
     if(namaLengkap && email && telepon && kelurahan && kecamatan && kodePos && nik && jenisKelamin){
@@ -89,6 +110,25 @@ const UbahProfil = ({navigation}) => {
       setIsError('Mohon untuk mengisi semua data yang diperlukan!')
     }
   }
+
+  
+
+  const renderKecamatan = () => {
+    if(daftarKecamatan.length > 0){
+      return daftarKecamatan.map(key => (
+        <Picker.Item label={key.nama_kecamatan} value={key.nama_kecamatan}/>
+      ))
+    }
+  }
+
+  const renderKelurahan = () => {
+    if(daftarKelurahan.length > 0) {
+      return daftarKelurahan.map(key => (
+        <Picker.Item label={key.nama_kelurahan} value={key.nama_kelurahan}/>
+      ))
+    }
+  }
+
   return (
     <View style={styles.container}>
       <ScrollView>
@@ -96,8 +136,16 @@ const UbahProfil = ({navigation}) => {
           <TextInput value={namaLengkap} onChangeText={e => setNamaLengkap(e)} placeholder="Nama Lengkap" style={styles.textInput}/>
           <TextInput value={email} onChangeText={e => setEmail(e)} placeholder="Email" value={email} style={{...styles.textInput, color: 'red'}} editable={false}/>
           <TextInput value={telepon} keyboardType='numeric' onChangeText={e => setTelepon(e)} placeholder="Nomor Telepon" style={styles.textInput}/>
-          <TextInput value={kelurahan} onChangeText={e => setKelurahan(e)} placeholder="Kelurahan" style={styles.textInput}/>
-          <TextInput value={kecamatan} onChangeText={e => setKecamatan(e)} placeholder="Kecamatan" style={styles.textInput}/>
+          {/* <TextInput value={kelurahan} onChangeText={e => setKelurahan(e)} placeholder="Kelurahan" style={styles.textInput}/> */}
+          <Picker selectedValue={kecamatan} onValueChange={e => onKecamatanChanged(e)}>
+            <Picker.Item label="Pilih Kecamatan" value={""}/>
+            {renderKecamatan()}
+          </Picker>
+          <Picker selectedValue={kelurahan} onValueChange={e => setKelurahan(e)}>
+            <Picker.Item label="Pilih Kelurahan" value={""}/>
+            {renderKelurahan()}
+          </Picker>
+          {/* <TextInput value={kecamatan} onChangeText={e => setKecamatan(e)} placeholder="Kecamatan" style={styles.textInput}/> */}
           <TextInput value={kodePos} keyboardType='numeric' onChangeText={e => setKodePos(e)} placeholder="Kode Pos" style={styles.textInput}/>
           <TextInput value={nik} keyboardType='numeric' onChangeText={e => setNik(e)} placeholder="Nomor Induk Kependudukan" style={styles.textInput}/>
           <Picker selectedValue={jenisKelamin} onValueChange={e => setJenisKelamin(e)}>
@@ -120,7 +168,6 @@ export default UbahProfil
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    // paddingTop:50,
     paddingHorizontal: 20,
 
   },

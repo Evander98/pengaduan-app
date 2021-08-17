@@ -1,5 +1,5 @@
 import React, {useState, useEffect} from 'react';
-import {ScrollView, StyleSheet, Text, TextInput, View} from 'react-native';
+import {ScrollView, StyleSheet, Text, TextInput, View, TouchableOpacity, Alert} from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import Feather from 'react-native-vector-icons/Feather';
@@ -18,6 +18,7 @@ const PengaduanTunggal = ({navigation, route}) => {
     nama_mitra_kerja,
     status,
     id_pengaduan,
+    sara
   } = route.params;
 
   const [isiKomentar, setIsiKomentar] = useState('');
@@ -67,6 +68,19 @@ const PengaduanTunggal = ({navigation, route}) => {
     }
   };
 
+  const deletePengaduan = () => {
+    axios.delete(`${urlAPI}/complaint/deleteComplaint?id_pengaduan=${id_pengaduan}`)
+    .then(res => {
+      Alert.alert('Pemberitahuan', res.data, [
+        {
+          text: 'OK',
+          onPress: () => navigation.goBack(),
+        },
+      ])
+
+    })
+  }
+
   const renderComment = () => {
     return daftarKomentar.map((key, index) => (
       <View key={index} style={styles.commentWrapper}>
@@ -102,6 +116,7 @@ const PengaduanTunggal = ({navigation, route}) => {
               <Text style={styles.status}>{status == 0 ? 'Belum diterima' : status == 1 ? 'Diterima' : status == 2 ? 'Selesai' : "Terjadi kesalahan"}</Text>
             </View>
           }
+          {user.role == 1 && sara ? <Text style={styles.sara}>Pengaduan ini mengandung unsur SARA</Text> : null }
         </View>
         {renderComment()}
       </ScrollView>
@@ -121,6 +136,13 @@ const PengaduanTunggal = ({navigation, route}) => {
             style={styles.icon}
           />
         </View>
+        : null
+      }
+      {
+        user.role == 1 && sara ?
+        <TouchableOpacity onPress={deletePengaduan} style={styles.button}>
+          <Text style={styles.buttonText}>HAPUS PENGADUAN</Text>
+        </TouchableOpacity>
         : null
       }
     </View>
@@ -187,5 +209,22 @@ const styles = StyleSheet.create({
     position: 'absolute',
     zIndex: 9,
     color: '#C1272D'
+  },
+  sara : {
+    color: '#C1272D',
+    fontSize: 20
+  },
+  button: {
+    backgroundColor: '#C1272D',
+    alignItems: 'center',
+    justifyContent: 'center',
+    height: 45,
+    borderRadius: 25,
+    margin: 15
+  },
+  buttonText: {
+    color: 'white',
+    fontSize: 20,
+    fontWeight: '700',
   },
 });
