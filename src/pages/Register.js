@@ -105,7 +105,7 @@ const Register = ({navigation}) => {
           />
           <TouchableOpacity onPress={() => navigation.navigate('SyaratKetentuan')}>
             <Text style={styles.text}>
-              Saya setuju dengan syarat dan ketentuan yang berlaku
+              Saya setuju dengan <Text style={{textDecorationLine: 'underline'}}>syarat dan ketentuan</Text> yang berlaku
             </Text>
           </TouchableOpacity>
         </View>
