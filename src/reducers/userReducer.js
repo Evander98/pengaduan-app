@@ -10,6 +10,7 @@ const INITIAL_STATE = {
   kodePos: '',
   nik: '',
   error: '',
+  isVerified: 0
 };
 
 export default (state = INITIAL_STATE, action) => {
@@ -26,7 +27,8 @@ export default (state = INITIAL_STATE, action) => {
         kelurahan: action.payload.kelurahan,
         kecamatan: action.payload.kecamatan,
         kodePos: action.payload.kode_pos,
-        nik: action.payload.nik
+        nik: action.payload.nik,
+        isVerified: action.payload.is_verified,
       };
     case 'ERROR_MESSAGE':
       return {...INITIAL_STATE, error: action.payload};
